@@ -2,7 +2,7 @@ import random
 import numpy as np
 from mss import mss
 from PIL import Image
-from encoder import TopEncoder, MidEncoder, BumEncoder
+from tile_encoder import TileEncoder
 
 sct = mss()
 
@@ -15,21 +15,18 @@ def grab_tiles(num_tiles, tile_size=(64,64)):
 
     print('<screenshot taken>')
 
-    pixels = np.array(sct_img)
+    pixels = np.array(sct_img)[:,:,:3]
 
     tiles = []
     for _ in range(num_tiles):
         i = random.randrange(pixels.shape[0] - tile_size[0])
         j = random.randrange(pixels.shape[1] - tile_size[1])
         tile = pixels[i:i+tile_size[0],j:j+tile_size[1]]
-        Image.fromarray(tile).show()
         tiles.append(tile)
 
     return tiles
 
-top_encoder = TopEncoder()
-mid_encoder = MidEncoder()
-bum_encoder = BumEncoder()
+tile_encoder = TileEncoder()
 
 epoch = 1;tiles = []
 while True:
@@ -40,19 +37,9 @@ while True:
 
     print(str(len(tiles)) + ' tiles in corpus.')
 
-    print('Training top tile encoder...')
-    top_encoder.fit(tiles)
-    top_ncoder.save()
-
-    print('Training mid tile encoder...')
-    chips = top_encoder.encode(tiles)
-    mid_encoder.fit(chips)
-    mid_encoder.save()
-
-    print('Training bum tile encoder...')
-    chips = mid_encoder.encode(chips)
-    bum_encoder.fit(chips)
-    bum_encoder.save()
+    print('Training tile encoder...')
+    tile_encoder.fit(tiles)
+    tile_encoder.save()
 
     epoch += 1
 
