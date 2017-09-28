@@ -6,12 +6,8 @@ from tile_encoder import TileEncoder
 
 sct = mss()
 
-# BUG:
-# The dict is modified in place by mss so make a copy for each call.
-mon = {'top': 0, 'left': 0, 'width': 1280, 'height': 800}
-
 def grab_tiles(num_tiles, tile_size=(64,64)):
-    sct_img = sct.grab(dict(mon))
+    sct_img = sct.grab({'top': 0, 'left': 0, 'width': 1280, 'height': 800})
 
     print('<screenshot taken>')
 
@@ -25,6 +21,8 @@ def grab_tiles(num_tiles, tile_size=(64,64)):
         tiles.append(tile)
 
     return tiles
+
+
 
 tile_encoder = TileEncoder()
 

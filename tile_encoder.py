@@ -9,7 +9,7 @@ class TileEncoder:
     autoencoder = None
     model_name = 'tile_encoder' 
 
-    def __init__(self):
+    def __init__(self, encoding_size):
         inp = Input(shape=(64, 64, 3))
 
         hidden = Convolution2D(4, (8, 8), strides=(4, 4), padding='same', activation='relu')(inp)
@@ -17,7 +17,7 @@ class TileEncoder:
         hidden = Convolution2D(1, (4, 4), strides=(2, 2), padding='same', activation='relu')(hidden)
 
         hidden = Reshape((16,))(hidden)
-        hidden = Dense(16, activation='relu')(hidden)
+        hidden = Dense(encoding_size, activation='relu')(hidden)
 
         encoder = Model(inp, hidden)
         
@@ -40,7 +40,7 @@ class TileEncoder:
         self.load()
 
     def preprocess(self, X): return np.array(X) / 255.0
-    def postprocess(self, Y): return Y * 255.0
+    def postprocess(self, Y): return (Y * 255.0).astype(np.uint8)
 
     def save(self):
         weights_file_name = '.' + self.model_name + '.h5'
