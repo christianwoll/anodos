@@ -23,7 +23,7 @@ def single_tile(x, y):
 x = 640 - 16
 y = 400 - 16
 step = 4
-long_mem = 100
+long_mem = 2000
 batch_size = 64
 
 # Tile encoder parameters.
@@ -106,7 +106,8 @@ while True:
     thought_memory = thought_memory[-long_mem:]
     action_memory = action_memory[-long_mem:]
     brain_memory = brain_memory[-long_mem:]
-    expected_score_memory = [-long_mem+short_mem:]
+
+    expected_score_memory = expected_score_memory[-long_mem+short_mem:]
 
     # Create the necesary vectors for the LSTM and Q-score
     brain_sequences = [brain_memory[i:i+short_mem] for i in range(len(brain_memory) - short_mem)]
