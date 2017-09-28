@@ -6,20 +6,20 @@ from keras.models import Model
 
 class ThoughtLSTM:
     lstm = None
-    maxlen = None
     model_name = 'thoughts_lstm'
 
-    def __init__(self, input_length, output_length, maxlen):
-        inp = Input(shape=(self.maxlen, input_length))
+    def __init__(self, maxlen, input_length, output_length):
+        inp = Input(shape=(maxlen, input_length))
         
         hidden = LSTM(64)(inp)
-        hidden = Dense(output_length, activation='relu')(hidden)
+        hidden = Dense(output_length)(hidden)
 
         lstm = Model(inp, hidden)
         lstm.compile(loss='mean_squared_error', optimizer='rmsprop')
 
         self.lstm = lstm
-        self.maxlen = maxlen
+
+        self.load()
 
     def save(self):
         weights_file_name = '.' + self.model_name + '.h5'
